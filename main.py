@@ -1,5 +1,21 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask
+from flask_migrate import Migrate
+from app.config.config import APP_CONFIG
+from app.db.database import db
 
+def create_app():
+    """App factory"""
+    app = Flask(__name__)
+    app.config.from_object(APP_CONFIG["development"])
+    db.init_app(app)
+    Migrate(app,db)
+
+    # Register blueprint apps
+    app.register_blueprint(homeViews)
+
+    return app
+    
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 
